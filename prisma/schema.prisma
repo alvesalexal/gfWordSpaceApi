@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -62,7 +62,7 @@ model Content {
   id            Int       @id @default(autoincrement())
   created_at    DateTime  @default(now())
   url           String?
-  message       String    @db.LongText()
+  message       String    @db.Text()
   title         String
   subTitle      String?
   observation   String?
@@ -85,7 +85,7 @@ model Study {
 
 model Test {
   id             Int        @id @default(autoincrement())
-  title          String     @db.LongText()
+  title          String     @db.Text()
   timer_minutes  Int        @default(60)
   observation    String?
   created_at     DateTime   @default(now())
@@ -97,10 +97,10 @@ model Test {
 
 model Question {
   id             Int      @id @default(autoincrement())
-  title          String   @db.LongText()
+  title          String   @db.Text()
   type           String   @default("multiple_choice") // "multiple_choice" | "free_text"
-  options        String?  @db.LongText() // JSON: [{id:"a",text:"Opcao 1"}, ...]
-  correct_answer String?  @db.LongText() // id da opcao correta (ex: "a")
+  options        String?  @db.Text() // JSON: [{id:"a",text:"Opcao 1"}, ...]
+  correct_answer String?  @db.Text() // id da opcao correta (ex: "a")
   order          Int      @default(0)
   fk_test_id     Int
   test           Test     @relation(fields: [fk_test_id], references: [id])
@@ -110,7 +110,7 @@ model Performs {
   id            Int      @id @default(autoincrement())
   created_at    DateTime @default(now())
   score         Decimal?
-  answer        String?  @db.LongText() // JSON: {"1":"a","2":"texto..."}
+  answer        String?  @db.Text() // JSON: {"1":"a","2":"texto..."}
   fk_student_id Int
   fk_test_id    Int
   student       Student  @relation(fields: [fk_student_id], references: [id])
@@ -120,7 +120,7 @@ model Performs {
 model Comment {
   id            Int      @id @default(autoincrement())
   created_at    DateTime @default(now())
-  message       String   @db.LongText()
+  message       String   @db.Text()
   fk_student_id Int
   fk_content_id Int
   student       Student  @relation(fields: [fk_student_id], references: [id])
