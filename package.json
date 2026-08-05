@@ -15,7 +15,8 @@
   },
   "scripts": {
     "dev": "tsx watch --env-file .env src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "vercel-build": "prisma generate && tsc"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
