@@ -13,7 +13,6 @@ export default class DashboardService extends DefaultService {
     }
 
     const contents = await prisma.content.findMany({
-      where: { fk_teacher_id: teacher.id },
       include: { class: true, Test: true, Comment: true },
       orderBy: { created_at: "desc" },
     });
@@ -22,12 +21,17 @@ export default class DashboardService extends DefaultService {
     const leituras = contents.filter((c) => c.type === "leitura");
     const provas = contents.filter((c) => c.type === "prova");
 
-    const totalAlunos = await prisma.student.count({
-      where: { active: true },
-    });
+    const contentClassIds = [...new Set(contents.map((c) => c.fk_class_id))];
 
-    const totalTurmas = await prisma.lecture.count({
-      where: { fk_teacher_id: teacher.id },
+    const totalTurmas = await prisma.class.count();
+
+    const totalAlunos = await prisma.student.count({
+      where: {
+        active: true,
+        Study: {
+          some: {},
+        },
+      },
     });
 
     return {
@@ -216,12 +220,11 @@ export default class DashboardService extends DefaultService {
       throw new Error("Professor não encontrado.");
     }
 
-    const lectures = await prisma.lecture.findMany({
-      where: { fk_teacher_id: teacher.id },
-      include: { class: true },
+    return await prisma.class.findMany({
+      include: {
+        _count: { select: { Study: true, Content: true } },
+      },
     });
-
-    return lectures.map((l) => l.class);
   }
 
   async getStudentClasses(studentUserId: number) {

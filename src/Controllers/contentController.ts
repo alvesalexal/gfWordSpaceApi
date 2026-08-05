@@ -1,6 +1,17 @@
 import { Response } from "express";
 import ContentService from "../Services/ContentService";
 import { AuthRequest } from "../Middleware/auth";
+import prisma from "../lib/prisma";
+
+async function getTeacherIdByPersonId(personId: number): Promise<number> {
+  const teacher = await prisma.teacher.findFirst({
+    where: { fk_person_id: personId },
+  });
+  if (!teacher) {
+    throw new Error("Professor não encontrado.");
+  }
+  return teacher.id;
+}
 
 const getAllByType = async (req: AuthRequest, res: Response) => {
   try {
@@ -47,6 +58,8 @@ const create = async (req: AuthRequest, res: Response) => {
       return;
     }
 
+    const teacherId = await getTeacherIdByPersonId(req.userId);
+
     const contentService = new ContentService();
     const content = await contentService.create({
       title,
@@ -56,7 +69,7 @@ const create = async (req: AuthRequest, res: Response) => {
       observation,
       type,
       fk_class_id,
-      fk_teacher_id: req.userId,
+      fk_teacher_id: teacherId,
     });
 
     res.status(201).json(content);
@@ -103,6 +116,8 @@ const createFullTest = async (req: AuthRequest, res: Response) => {
       return;
     }
 
+    const teacherId = await getTeacherIdByPersonId(req.userId);
+
     const contentService = new ContentService();
     const content = await contentService.createFullTest({
       title,
@@ -110,7 +125,7 @@ const createFullTest = async (req: AuthRequest, res: Response) => {
       message,
       observation,
       fk_class_id,
-      fk_teacher_id: req.userId,
+      fk_teacher_id: teacherId,
       timer_minutes,
       questions: questions || [],
     });
