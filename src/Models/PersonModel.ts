@@ -1,4 +1,5 @@
 import { IPerson } from "./types";
+import { getBrazilDate } from "../utils/timezone";
 
 export default class PersonModel {
   private id: number;
@@ -12,7 +13,7 @@ export default class PersonModel {
     this.name = param.name;
     this.phone = param.phone;
     this.email = param.email;
-    this.created_at = param.created_at || new Date();
+    this.created_at = param.created_at || getBrazilDate();
   }
 
   getAllProps() {

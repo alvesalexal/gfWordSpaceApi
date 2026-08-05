@@ -48,14 +48,15 @@ const updateAvatar = async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    if (!req.file) {
-      res.status(400).json({ message: "Nenhum arquivo enviado." });
+    const { avatar } = req.body;
+
+    if (!avatar) {
+      res.status(400).json({ message: "Nenhuma imagem enviada." });
       return;
     }
 
-    const urlAvatar = `/uploads/avatars/${req.file.filename}`;
     const personService = new PersonService();
-    const person = await personService.updateAvatar(personId, urlAvatar);
+    const person = await personService.updateAvatar(personId, avatar);
 
     res.status(200).json(person);
   } catch (error: any) {
