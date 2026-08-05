@@ -167,7 +167,7 @@ const remove = async (req: AuthRequest, res: Response) => {
 
 const createFullTest = async (req: AuthRequest, res: Response) => {
   try {
-    const { title, subTitle, message, observation, fk_class_id, timer_minutes, questions } = req.body;
+    const { title, subTitle, message, observation, fk_class_id, type, timer_minutes, questions } = req.body;
 
     if (!title || !message || !fk_class_id) {
       res.status(400).json({ message: "Título, descrição e turma são obrigatórios." });
@@ -187,6 +187,7 @@ const createFullTest = async (req: AuthRequest, res: Response) => {
       subTitle,
       message,
       observation,
+      type,
       fk_class_id,
       fk_teacher_id: teacherId,
       timer_minutes,
@@ -195,7 +196,7 @@ const createFullTest = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(content);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao criar prova." });
+    res.status(500).json({ message: error.message || "Erro ao criar conteúdo." });
   }
 };
 

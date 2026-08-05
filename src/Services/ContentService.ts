@@ -32,6 +32,7 @@ interface CreateFullTestParams {
   subTitle?: string;
   message: string;
   observation?: string;
+  type?: string;
   fk_class_id: number;
   fk_teacher_id: number;
   timer_minutes?: number;
@@ -138,7 +139,7 @@ export default class ContentService extends DefaultService {
         subTitle: data.subTitle || "",
         message: data.message,
         observation: data.observation || "",
-        type: "prova",
+        type: data.type || "prova",
         fk_class_id: data.fk_class_id,
         fk_teacher_id: data.fk_teacher_id,
       },
