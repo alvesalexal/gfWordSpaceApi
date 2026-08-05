@@ -18,6 +18,46 @@ const getAllByType = async (req: AuthRequest, res: Response) => {
     const { type } = req.params;
     const { class_id } = req.query;
 
+    if (req.userRole === "student" && req.userId) {
+      const student = await prisma.student.findFirst({
+        where: { fk_person_id: req.userId },
+      });
+
+      if (!student) {
+        res.status(401).json({ message: "Aluno não encontrado." });
+        return;
+      }
+
+      const studies = await prisma.study.findMany({
+        where: { fk_student_id: student.id },
+        select: { fk_class_id: true },
+      });
+
+      const classIds = studies.map((s) => s.fk_class_id);
+
+      const contents = await prisma.content.findMany({
+        where: {
+          type,
+          fk_class_id: { in: classIds },
+        },
+        include: {
+          teacher: { include: { person: true } },
+          class: true,
+          Test: {
+            include: { Question: { orderBy: { order: "asc" } } },
+          },
+          Comment: {
+            include: { student: { include: { person: true } } },
+            orderBy: { created_at: "desc" },
+          },
+        },
+        orderBy: { created_at: "desc" },
+      });
+
+      res.status(200).json(contents);
+      return;
+    }
+
     const contentService = new ContentService();
     const contents = await contentService.getAllByType(type, class_id ? Number(class_id) : undefined);
 
@@ -36,6 +76,29 @@ const getById = async (req: AuthRequest, res: Response) => {
     if (!content) {
       res.status(404).json({ message: "Conteúdo não encontrado." });
       return;
+    }
+
+    if (req.userRole === "student" && req.userId) {
+      const student = await prisma.student.findFirst({
+        where: { fk_person_id: req.userId },
+      });
+
+      if (!student) {
+        res.status(401).json({ message: "Aluno não encontrado." });
+        return;
+      }
+
+      const study = await prisma.study.findFirst({
+        where: {
+          fk_student_id: student.id,
+          fk_class_id: content.fk_class_id,
+        },
+      });
+
+      if (!study) {
+        res.status(403).json({ message: "Acesso negado. Você não está matriculado nesta turma." });
+        return;
+      }
     }
 
     res.status(200).json(content);
