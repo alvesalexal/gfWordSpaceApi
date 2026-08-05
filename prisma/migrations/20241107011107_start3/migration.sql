@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE `Test` MODIFY `answer_key` LONGTEXT NOT NULL,
+    MODIFY `answer` LONGTEXT NOT NULL,
+    MODIFY `title` LONGTEXT NOT NULL;

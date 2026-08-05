@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Person {
+  id         Int       @id @default(autoincrement())
+  name       String
+  phone      String?
+  email      String
+  password   String
+  role       String    @default("student") // "teacher" ou "student"
+  url_avatar String?
+  created_at DateTime  @default(now())
+  Student    Student[]
+  Teacher    Teacher[]
+}
+
+model Student {
+  id           Int        @id @default(autoincrement())
+  active       Boolean    @default(true)
+  bio          String?
+  fk_person_id Int
+  person       Person     @relation(fields: [fk_person_id], references: [id])
+  Study        Study[]
+  Performs     Performs[]
+  Comment      Comment[]
+}
+
+model Teacher {
+  id           Int       @id @default(autoincrement())
+  active       Boolean   @default(true)
+  bio          String?
+  fk_person_id Int
+  person       Person    @relation(fields: [fk_person_id], references: [id])
+  Lecture      Lecture[]
+  Content      Content[]
+}
+
+model Class {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Bio     String?   @db.VarChar(150)
+  Lecture Lecture[]
+  Content Content[]
+  Study   Study[]
+}
+
+model Lecture {
+  id            Int     @id @default(autoincrement())
+  fk_teacher_id Int
+  fk_class_id   Int
+  teacher       Teacher @relation(fields: [fk_teacher_id], references: [id])
+  class         Class   @relation(fields: [fk_class_id], references: [id])
+}
+
+model Content {
+  id            Int       @id @default(autoincrement())
+  created_at    DateTime  @default(now())
+  url           String?
+  message       String    @db.LongText()
+  title         String
+  subTitle      String?
+  observation   String?
+  type          String    @default("tarefa") // "tarefa", "leitura", "prova"
+  fk_class_id   Int
+  fk_teacher_id Int
+  class         Class     @relation(fields: [fk_class_id], references: [id])
+  teacher       Teacher   @relation(fields: [fk_teacher_id], references: [id])
+  Test          Test[]
+  Comment       Comment[]
+}
+
+model Study {
+  id            Int     @id @default(autoincrement())
+  fk_student_id Int
+  fk_class_id   Int
+  class         Class   @relation(fields: [fk_class_id], references: [id])
+  studtent      Student @relation(fields: [fk_student_id], references: [id])
+}
+
+model Test {
+  id             Int        @id @default(autoincrement())
+  title          String     @db.LongText()
+  timer_minutes  Int        @default(60)
+  observation    String?
+  created_at     DateTime   @default(now())
+  fk_content_id  Int
+  content        Content    @relation(fields: [fk_content_id], references: [id])
+  Performs       Performs[]
+  Question       Question[]
+}
+
+model Question {
+  id             Int      @id @default(autoincrement())
+  title          String   @db.LongText()
+  type           String   @default("multiple_choice") // "multiple_choice" | "free_text"
+  options        String?  @db.LongText() // JSON: [{id:"a",text:"Opcao 1"}, ...]
+  correct_answer String?  @db.LongText() // id da opcao correta (ex: "a")
+  order          Int      @default(0)
+  fk_test_id     Int
+  test           Test     @relation(fields: [fk_test_id], references: [id])
+}
+
+model Performs {
+  id            Int      @id @default(autoincrement())
+  created_at    DateTime @default(now())
+  score         Decimal?
+  answer        String?  @db.LongText() // JSON: {"1":"a","2":"texto..."}
+  fk_student_id Int
+  fk_test_id    Int
+  student       Student  @relation(fields: [fk_student_id], references: [id])
+  test          Test     @relation(fields: [fk_test_id], references: [id])
+}
+
+model Comment {
+  id            Int      @id @default(autoincrement())
+  created_at    DateTime @default(now())
+  message       String   @db.LongText()
+  fk_student_id Int
+  fk_content_id Int
+  student       Student  @relation(fields: [fk_student_id], references: [id])
+  content       Content  @relation(fields: [fk_content_id], references: [id])
+}
