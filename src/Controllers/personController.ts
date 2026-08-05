@@ -7,7 +7,7 @@ const getUnique = async (req: AuthRequest, res: Response) => {
   const personService = new PersonService();
   const person = await personService.getPersonById(personId);
   if (!person) {
-    res.status(404).json({ message: "Pessoa não encontrada" });
+    res.status(404).json({ message: "Pessoa não encontrada." });
     return;
   }
 
@@ -25,7 +25,7 @@ const update = async (req: AuthRequest, res: Response) => {
     const personId = Number(req.params.id);
 
     if (req.userId !== personId) {
-      res.status(403).json({ message: "Acesso negado" });
+      res.status(403).json({ message: "Acesso negado." });
       return;
     }
 
@@ -35,7 +35,7 @@ const update = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(person);
   } catch (error: any) {
-    res.status(400).json({ message: error.message || "Erro ao atualizar perfil" });
+    res.status(400).json({ message: error.message || "Erro ao atualizar perfil." });
   }
 };
 
@@ -44,12 +44,12 @@ const updateAvatar = async (req: AuthRequest, res: Response) => {
     const personId = Number(req.params.id);
 
     if (req.userId !== personId) {
-      res.status(403).json({ message: "Acesso negado" });
+      res.status(403).json({ message: "Acesso negado." });
       return;
     }
 
     if (!req.file) {
-      res.status(400).json({ message: "Nenhum arquivo enviado" });
+      res.status(400).json({ message: "Nenhum arquivo enviado." });
       return;
     }
 
@@ -59,7 +59,7 @@ const updateAvatar = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(person);
   } catch (error: any) {
-    res.status(400).json({ message: error.message || "Erro ao atualizar avatar" });
+    res.status(400).json({ message: error.message || "Erro ao atualizar avatar." });
   }
 };
 

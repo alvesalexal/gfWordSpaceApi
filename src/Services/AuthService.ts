@@ -26,7 +26,7 @@ export default class AuthService extends DefaultService {
     });
 
     if (existingPerson) {
-      throw new Error("Email já cadastrado");
+      throw new Error("Email já cadastrado.");
     }
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -81,13 +81,13 @@ export default class AuthService extends DefaultService {
     });
 
     if (!person) {
-      throw new Error("Email ou senha inválidos");
+      throw new Error("Email ou senha inválidos.");
     }
 
     const validPassword = await bcrypt.compare(data.password, person.password);
 
     if (!validPassword) {
-      throw new Error("Email ou senha inválidos");
+      throw new Error("Email ou senha inválidos.");
     }
 
     const token = jwt.sign({ userId: person.id, role: person.role }, JWT_SECRET, { expiresIn: "7d" });
@@ -112,7 +112,7 @@ export default class AuthService extends DefaultService {
     });
 
     if (!person) {
-      throw new Error("Email não encontrado");
+      throw new Error("Email não encontrado.");
     }
 
     const resetToken = jwt.sign({ userId: person.id, type: "reset" }, JWT_SECRET, { expiresIn: "15m" });
@@ -127,11 +127,11 @@ export default class AuthService extends DefaultService {
     try {
       decoded = jwt.verify(token, JWT_SECRET) as { userId: number; type: string };
     } catch {
-      throw new Error("Token inválido ou expirado");
+      throw new Error("Token inválido ou expirado.");
     }
 
     if (decoded.type !== "reset") {
-      throw new Error("Token inválido");
+      throw new Error("Token inválido.");
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -141,7 +141,7 @@ export default class AuthService extends DefaultService {
       data: { password: hashedPassword },
     });
 
-    return { message: "Senha atualizada com sucesso" };
+    return { message: "Senha atualizada com sucesso." };
   }
 
   async getUserById(userId: number) {

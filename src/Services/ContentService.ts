@@ -320,7 +320,7 @@ export default class ContentService extends DefaultService {
     });
 
     if (!student) {
-      throw new Error("Aluno não encontrado");
+      throw new Error("Aluno não encontrado.");
     }
 
     return await prisma.comment.create({
@@ -349,7 +349,7 @@ export default class ContentService extends DefaultService {
     });
 
     if (!student) {
-      throw new Error("Aluno não encontrado");
+      throw new Error("Aluno não encontrado.");
     }
 
     const questions = await prisma.question.findMany({
@@ -406,7 +406,7 @@ export default class ContentService extends DefaultService {
     });
 
     if (!student) {
-      throw new Error("Aluno não encontrado");
+      throw new Error("Aluno não encontrado.");
     }
 
     return await prisma.performs.findMany({

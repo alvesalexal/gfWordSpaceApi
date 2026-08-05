@@ -12,7 +12,7 @@ const getAllByType = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(contents);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar conteúdos" });
+    res.status(500).json({ message: error.message || "Erro ao buscar conteúdos." });
   }
 };
 
@@ -23,13 +23,13 @@ const getById = async (req: AuthRequest, res: Response) => {
     const content = await contentService.getById(id);
 
     if (!content) {
-      res.status(404).json({ message: "Conteúdo não encontrado" });
+      res.status(404).json({ message: "Conteúdo não encontrado." });
       return;
     }
 
     res.status(200).json(content);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar conteúdo" });
+    res.status(500).json({ message: error.message || "Erro ao buscar conteúdo." });
   }
 };
 
@@ -38,12 +38,12 @@ const create = async (req: AuthRequest, res: Response) => {
     const { title, subTitle, message, url, observation, type, fk_class_id } = req.body;
 
     if (!title || !message || !type || !fk_class_id) {
-      res.status(400).json({ message: "Título, mensagem, tipo e turma são obrigatórios" });
+      res.status(400).json({ message: "Título, mensagem, tipo e turma são obrigatórios." });
       return;
     }
 
     if (!req.userId) {
-      res.status(401).json({ message: "Não autenticado" });
+      res.status(401).json({ message: "Não autenticado." });
       return;
     }
 
@@ -61,7 +61,7 @@ const create = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(content);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao criar conteúdo" });
+    res.status(500).json({ message: error.message || "Erro ao criar conteúdo." });
   }
 };
 
@@ -73,7 +73,7 @@ const update = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(content);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao atualizar conteúdo" });
+    res.status(500).json({ message: error.message || "Erro ao atualizar conteúdo." });
   }
 };
 
@@ -83,9 +83,9 @@ const remove = async (req: AuthRequest, res: Response) => {
     const contentService = new ContentService();
     await contentService.delete(id);
 
-    res.status(200).json({ message: "Conteúdo removido" });
+    res.status(200).json({ message: "Conteúdo removido." });
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao remover conteúdo" });
+    res.status(500).json({ message: error.message || "Erro ao remover conteúdo." });
   }
 };
 
@@ -94,12 +94,12 @@ const createFullTest = async (req: AuthRequest, res: Response) => {
     const { title, subTitle, message, observation, fk_class_id, timer_minutes, questions } = req.body;
 
     if (!title || !message || !fk_class_id) {
-      res.status(400).json({ message: "Título, descrição e turma são obrigatórios" });
+      res.status(400).json({ message: "Título, descrição e turma são obrigatórios." });
       return;
     }
 
     if (!req.userId) {
-      res.status(401).json({ message: "Não autenticado" });
+      res.status(401).json({ message: "Não autenticado." });
       return;
     }
 
@@ -117,7 +117,7 @@ const createFullTest = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(content);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao criar prova" });
+    res.status(500).json({ message: error.message || "Erro ao criar prova." });
   }
 };
 
@@ -127,7 +127,7 @@ const updateFullTest = async (req: AuthRequest, res: Response) => {
     const { title, subTitle, message, observation, fk_class_id, timer_minutes, questions } = req.body;
 
     if (!title || !message || !fk_class_id) {
-      res.status(400).json({ message: "Título, descrição e turma são obrigatórios" });
+      res.status(400).json({ message: "Título, descrição e turma são obrigatórios." });
       return;
     }
 
@@ -145,7 +145,7 @@ const updateFullTest = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(content);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao atualizar prova" });
+    res.status(500).json({ message: error.message || "Erro ao atualizar prova." });
   }
 };
 
@@ -154,7 +154,7 @@ const createTest = async (req: AuthRequest, res: Response) => {
     const { title, observation, timer_minutes, fk_content_id } = req.body;
 
     if (!title || !fk_content_id) {
-      res.status(400).json({ message: "Título e conteúdo são obrigatórios" });
+      res.status(400).json({ message: "Título e conteúdo são obrigatórios." });
       return;
     }
 
@@ -168,7 +168,7 @@ const createTest = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(test);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao criar prova" });
+    res.status(500).json({ message: error.message || "Erro ao criar prova." });
   }
 };
 
@@ -180,7 +180,7 @@ const getTests = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(tests);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar provas" });
+    res.status(500).json({ message: error.message || "Erro ao buscar provas." });
   }
 };
 
@@ -190,9 +190,9 @@ const deleteTest = async (req: AuthRequest, res: Response) => {
     const contentService = new ContentService();
     await contentService.deleteTest(id);
 
-    res.status(200).json({ message: "Prova removida" });
+    res.status(200).json({ message: "Prova removida." });
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao remover prova" });
+    res.status(500).json({ message: error.message || "Erro ao remover prova." });
   }
 };
 
@@ -202,7 +202,7 @@ const createQuestion = async (req: AuthRequest, res: Response) => {
     const { title, type, options, correct_answer, order } = req.body;
 
     if (!title) {
-      res.status(400).json({ message: "Título da questão é obrigatório" });
+      res.status(400).json({ message: "Título da questão é obrigatório." });
       return;
     }
 
@@ -218,7 +218,7 @@ const createQuestion = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(question);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao criar questão" });
+    res.status(500).json({ message: error.message || "Erro ao criar questão." });
   }
 };
 
@@ -230,7 +230,7 @@ const updateQuestion = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(question);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao atualizar questão" });
+    res.status(500).json({ message: error.message || "Erro ao atualizar questão." });
   }
 };
 
@@ -240,9 +240,9 @@ const deleteQuestion = async (req: AuthRequest, res: Response) => {
     const contentService = new ContentService();
     await contentService.deleteQuestion(id);
 
-    res.status(200).json({ message: "Questão removida" });
+    res.status(200).json({ message: "Questão removida." });
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao remover questão" });
+    res.status(500).json({ message: error.message || "Erro ao remover questão." });
   }
 };
 
@@ -254,7 +254,7 @@ const getQuestions = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(questions);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar questões" });
+    res.status(500).json({ message: error.message || "Erro ao buscar questões." });
   }
 };
 
@@ -264,12 +264,12 @@ const addComment = async (req: AuthRequest, res: Response) => {
     const contentId = Number(req.params.contentId);
 
     if (!message) {
-      res.status(400).json({ message: "Mensagem é obrigatória" });
+      res.status(400).json({ message: "Mensagem é obrigatória." });
       return;
     }
 
     if (!req.userId) {
-      res.status(401).json({ message: "Não autenticado" });
+      res.status(401).json({ message: "Não autenticado." });
       return;
     }
 
@@ -278,7 +278,7 @@ const addComment = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(comment);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao adicionar comentário" });
+    res.status(500).json({ message: error.message || "Erro ao adicionar comentário." });
   }
 };
 
@@ -288,9 +288,9 @@ const deleteComment = async (req: AuthRequest, res: Response) => {
     const contentService = new ContentService();
     await contentService.deleteComment(id);
 
-    res.status(200).json({ message: "Comentário removido" });
+    res.status(200).json({ message: "Comentário removido." });
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao remover comentário" });
+    res.status(500).json({ message: error.message || "Erro ao remover comentário." });
   }
 };
 
@@ -300,12 +300,12 @@ const submitTest = async (req: AuthRequest, res: Response) => {
     const { answers } = req.body;
 
     if (!answers || typeof answers !== "object") {
-      res.status(400).json({ message: "Respostas são obrigatórias" });
+      res.status(400).json({ message: "Respostas são obrigatórias." });
       return;
     }
 
     if (!req.userId) {
-      res.status(401).json({ message: "Não autenticado" });
+      res.status(401).json({ message: "Não autenticado." });
       return;
     }
 
@@ -318,14 +318,14 @@ const submitTest = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(perform);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao enviar prova" });
+    res.status(500).json({ message: error.message || "Erro ao enviar prova." });
   }
 };
 
 const getMyPerforms = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.userId) {
-      res.status(401).json({ message: "Não autenticado" });
+      res.status(401).json({ message: "Não autenticado." });
       return;
     }
 
@@ -334,7 +334,7 @@ const getMyPerforms = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(performs);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar provas realizadas" });
+    res.status(500).json({ message: error.message || "Erro ao buscar provas realizadas." });
   }
 };
 
@@ -346,7 +346,7 @@ const getTestPerforms = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(performs);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar respostas" });
+    res.status(500).json({ message: error.message || "Erro ao buscar respostas." });
   }
 };
 

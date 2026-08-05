@@ -9,7 +9,7 @@ export default class DashboardService extends DefaultService {
     });
 
     if (!teacher) {
-      throw new Error("Professor não encontrado");
+      throw new Error("Professor não encontrado.");
     }
 
     const contents = await prisma.content.findMany({
@@ -48,7 +48,7 @@ export default class DashboardService extends DefaultService {
     });
 
     if (!student) {
-      throw new Error("Aluno não encontrado");
+      throw new Error("Aluno não encontrado.");
     }
 
     const studies = await prisma.study.findMany({
@@ -182,7 +182,7 @@ export default class DashboardService extends DefaultService {
     });
 
     if (!student) {
-      throw new Error("Aluno não encontrado");
+      throw new Error("Aluno não encontrado.");
     }
 
     const existing = await prisma.study.findFirst({
@@ -193,7 +193,7 @@ export default class DashboardService extends DefaultService {
     });
 
     if (existing) {
-      throw new Error("Aluno já está matriculado nesta turma");
+      throw new Error("Aluno já está matriculado nesta turma.");
     }
 
     return await prisma.study.create({
@@ -213,7 +213,7 @@ export default class DashboardService extends DefaultService {
     });
 
     if (!teacher) {
-      throw new Error("Professor não encontrado");
+      throw new Error("Professor não encontrado.");
     }
 
     const lectures = await prisma.lecture.findMany({
@@ -232,7 +232,7 @@ export default class DashboardService extends DefaultService {
     });
 
     if (!student) {
-      throw new Error("Aluno não encontrado");
+      throw new Error("Aluno não encontrado.");
     }
 
     const studies = await prisma.study.findMany({

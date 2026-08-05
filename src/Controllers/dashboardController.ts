@@ -6,7 +6,7 @@ import { AuthRequest } from "../Middleware/auth";
 const getTeacherDashboard = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.userId) {
-      res.status(401).json({ message: "Não autenticado" });
+      res.status(401).json({ message: "Não autenticado." });
       return;
     }
 
@@ -15,14 +15,14 @@ const getTeacherDashboard = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(data);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar dashboard" });
+    res.status(500).json({ message: error.message || "Erro ao buscar dashboard." });
   }
 };
 
 const getStudentDashboard = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.userId) {
-      res.status(401).json({ message: "Não autenticado" });
+      res.status(401).json({ message: "Não autenticado." });
       return;
     }
 
@@ -31,7 +31,7 @@ const getStudentDashboard = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(data);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar dashboard" });
+    res.status(500).json({ message: error.message || "Erro ao buscar dashboard." });
   }
 };
 
@@ -42,7 +42,7 @@ const getClasses = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(classes);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar turmas" });
+    res.status(500).json({ message: error.message || "Erro ao buscar turmas." });
   }
 };
 
@@ -51,7 +51,7 @@ const createClass = async (req: AuthRequest, res: Response) => {
     const { name, bio, studentIds } = req.body;
 
     if (!name) {
-      res.status(400).json({ message: "Nome da turma é obrigatório" });
+      res.status(400).json({ message: "Nome da turma é obrigatório." });
       return;
     }
 
@@ -60,7 +60,7 @@ const createClass = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(newClass);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao criar turma" });
+    res.status(500).json({ message: error.message || "Erro ao criar turma." });
   }
 };
 
@@ -70,7 +70,7 @@ const updateClass = async (req: AuthRequest, res: Response) => {
     const { name, bio, studentIds } = req.body;
 
     if (!name) {
-      res.status(400).json({ message: "Nome da turma é obrigatório" });
+      res.status(400).json({ message: "Nome da turma é obrigatório." });
       return;
     }
 
@@ -79,7 +79,7 @@ const updateClass = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(updatedClass);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao atualizar turma" });
+    res.status(500).json({ message: error.message || "Erro ao atualizar turma." });
   }
 };
 
@@ -90,9 +90,9 @@ const deleteClass = async (req: AuthRequest, res: Response) => {
     const dashboardService = new DashboardService();
     await dashboardService.deleteClass(Number(id));
 
-    res.status(200).json({ message: "Turma excluída com sucesso" });
+    res.status(200).json({ message: "Turma excluída com sucesso." });
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao excluir turma" });
+    res.status(500).json({ message: error.message || "Erro ao excluir turma." });
   }
 };
 
@@ -101,12 +101,12 @@ const enrollStudent = async (req: AuthRequest, res: Response) => {
     const { classId } = req.body;
 
     if (!req.userId) {
-      res.status(401).json({ message: "Não autenticado" });
+      res.status(401).json({ message: "Não autenticado." });
       return;
     }
 
     if (!classId) {
-      res.status(400).json({ message: "Turma é obrigatória" });
+      res.status(400).json({ message: "Turma é obrigatória." });
       return;
     }
 
@@ -115,14 +115,14 @@ const enrollStudent = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(enrollment);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao matricular aluno" });
+    res.status(500).json({ message: error.message || "Erro ao matricular aluno." });
   }
 };
 
 const getTeacherClasses = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.userId) {
-      res.status(401).json({ message: "Não autenticado" });
+      res.status(401).json({ message: "Não autenticado." });
       return;
     }
 
@@ -131,14 +131,14 @@ const getTeacherClasses = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(classes);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar turmas" });
+    res.status(500).json({ message: error.message || "Erro ao buscar turmas." });
   }
 };
 
 const getStudentClasses = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.userId) {
-      res.status(401).json({ message: "Não autenticado" });
+      res.status(401).json({ message: "Não autenticado." });
       return;
     }
 
@@ -147,7 +147,7 @@ const getStudentClasses = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(classes);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar turmas" });
+    res.status(500).json({ message: error.message || "Erro ao buscar turmas." });
   }
 };
 
@@ -158,7 +158,7 @@ const getStudents = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(students);
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Erro ao buscar alunos" });
+    res.status(500).json({ message: error.message || "Erro ao buscar alunos." });
   }
 };
 

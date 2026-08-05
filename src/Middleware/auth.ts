@@ -12,7 +12,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(401).json({ message: "Token não fornecido" });
+    res.status(401).json({ message: "Token não fornecido." });
     return;
   }
 
@@ -24,7 +24,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     req.userRole = decoded.role;
     next();
   } catch {
-    res.status(401).json({ message: "Token inválido" });
+    res.status(401).json({ message: "Token inválido." });
   }
 };
 

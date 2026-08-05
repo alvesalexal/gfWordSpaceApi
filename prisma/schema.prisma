@@ -5,6 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["debq"]
 }
 
 model Person {
@@ -84,26 +85,26 @@ model Study {
 }
 
 model Test {
-  id             Int        @id @default(autoincrement())
-  title          String     @db.Text()
-  timer_minutes  Int        @default(60)
-  observation    String?
-  created_at     DateTime   @default(now())
-  fk_content_id  Int
-  content        Content    @relation(fields: [fk_content_id], references: [id])
-  Performs       Performs[]
-  Question       Question[]
+  id            Int        @id @default(autoincrement())
+  title         String     @db.Text()
+  timer_minutes Int        @default(60)
+  observation   String?
+  created_at    DateTime   @default(now())
+  fk_content_id Int
+  content       Content    @relation(fields: [fk_content_id], references: [id])
+  Performs      Performs[]
+  Question      Question[]
 }
 
 model Question {
-  id             Int      @id @default(autoincrement())
-  title          String   @db.Text()
-  type           String   @default("multiple_choice") // "multiple_choice" | "free_text"
-  options        String?  @db.Text() // JSON: [{id:"a",text:"Opcao 1"}, ...]
-  correct_answer String?  @db.Text() // id da opcao correta (ex: "a")
-  order          Int      @default(0)
+  id             Int     @id @default(autoincrement())
+  title          String  @db.Text()
+  type           String  @default("multiple_choice") // "multiple_choice" | "free_text"
+  options        String? @db.Text() // JSON: [{id:"a",text:"Opcao 1"}, ...]
+  correct_answer String? @db.Text() // id da opcao correta (ex: "a")
+  order          Int     @default(0)
   fk_test_id     Int
-  test           Test     @relation(fields: [fk_test_id], references: [id])
+  test           Test    @relation(fields: [fk_test_id], references: [id])
 }
 
 model Performs {
