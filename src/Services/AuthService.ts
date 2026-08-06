@@ -7,6 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "wordspace-secret-key";
 
 interface RegisterParams {
   name: string;
+  username: string;
   email: string;
   password: string;
   role: string;
@@ -22,6 +23,22 @@ export default class AuthService extends DefaultService {
   async register(data: RegisterParams) {
     const prisma = super.getPersonPrisma();
 
+    if (!data.username || data.username.length < 3 || data.username.length > 20) {
+      throw new Error("Username deve ter entre 3 e 20 caracteres.");
+    }
+
+    if (!/^[a-zA-Z0-9_.]+$/.test(data.username)) {
+      throw new Error("Username deve conter apenas letras, números, _ e .");
+    }
+
+    const existingUsername = await prisma.person.findFirst({
+      where: { username: data.username },
+    });
+
+    if (existingUsername) {
+      throw new Error("Username já cadastrado.");
+    }
+
     const existingPerson = await prisma.person.findFirst({
       where: { email: data.email },
     });
@@ -35,6 +52,7 @@ export default class AuthService extends DefaultService {
     const person = await prisma.person.create({
       data: {
         name: data.name,
+        username: data.username,
         email: data.email,
         password: hashedPassword,
         role: data.role,
@@ -68,6 +86,7 @@ export default class AuthService extends DefaultService {
       user: {
         id: person.id,
         name: person.name,
+        username: person.username,
         email: person.email,
         role: person.role,
         avatar: person.url_avatar,
