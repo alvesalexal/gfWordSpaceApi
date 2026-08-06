@@ -170,6 +170,33 @@ export default class AuthService extends DefaultService {
     return { message: "Senha atualizada com sucesso." };
   }
 
+  async setUsername(userId: number, username: string) {
+    const prisma = super.getPersonPrisma();
+
+    if (!username || username.length < 3 || username.length > 20) {
+      throw new Error("Username deve ter entre 3 e 20 caracteres.");
+    }
+
+    if (!/^[a-zA-Z0-9_.]+$/.test(username)) {
+      throw new Error("Username deve conter apenas letras, números, _ e .");
+    }
+
+    const existing = await prisma.person.findFirst({
+      where: { username },
+    });
+
+    if (existing) {
+      throw new Error("Username já cadastrado.");
+    }
+
+    await prisma.person.update({
+      where: { id: userId },
+      data: { username },
+    });
+
+    return { message: "Username definido com sucesso." };
+  }
+
   async getUserById(userId: number) {
     const prisma = super.getPersonPrisma();
 
@@ -178,6 +205,7 @@ export default class AuthService extends DefaultService {
       select: {
         id: true,
         name: true,
+        username: true,
         email: true,
         role: true,
         url_avatar: true,
@@ -186,7 +214,12 @@ export default class AuthService extends DefaultService {
       },
     });
 
-    return person;
+    if (!person) return null;
+
+    return {
+      ...person,
+      needsUsername: !person.username,
+    };
   }
 
   async checkUsername(username: string) {

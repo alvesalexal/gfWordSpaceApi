@@ -100,6 +100,29 @@ const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
+const setUsername = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.userId) {
+      res.status(401).json({ message: "Não autenticado." });
+      return;
+    }
+
+    const { username } = req.body;
+
+    if (!username) {
+      res.status(400).json({ message: "Username é obrigatório." });
+      return;
+    }
+
+    const authService = new AuthService();
+    const result = await authService.setUsername(req.userId, username);
+
+    res.status(200).json(result);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message || "Erro ao definir username." });
+  }
+};
+
 const checkUsername = async (req: Request, res: Response) => {
   try {
     const { username } = req.params;
@@ -118,6 +141,6 @@ const checkUsername = async (req: Request, res: Response) => {
   }
 };
 
-const authController = { register, login, getMe, forgotPassword, resetPassword, checkUsername };
+const authController = { register, login, getMe, forgotPassword, resetPassword, checkUsername, setUsername };
 
 export default authController;
