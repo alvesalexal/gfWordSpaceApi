@@ -13,7 +13,7 @@ export default class DashboardService extends DefaultService {
     }
 
     const contents = await prisma.content.findMany({
-      include: { class: true, Test: true, Comment: true },
+      include: { Class: true, Test: true, Comment: true },
       orderBy: { created_at: "desc" },
     });
 
@@ -57,14 +57,14 @@ export default class DashboardService extends DefaultService {
 
     const studies = await prisma.study.findMany({
       where: { fk_student_id: student.id },
-      include: { class: true },
+      include: { Class: true },
     });
 
     const classIds = studies.map((s) => s.fk_class_id);
 
     const contents = await prisma.content.findMany({
       where: { fk_class_id: { in: classIds } },
-      include: { class: true, teacher: { include: { person: true } }, Test: true, Comment: true },
+      include: { Class: true, Teacher: { include: { Person: true } }, Test: true, Comment: true },
       orderBy: { created_at: "desc" },
     });
 
@@ -74,7 +74,7 @@ export default class DashboardService extends DefaultService {
 
     const performs = await prisma.performs.findMany({
       where: { fk_student_id: student.id },
-      include: { test: true },
+      include: { Test: true },
     });
 
     return {
@@ -95,8 +95,8 @@ export default class DashboardService extends DefaultService {
         _count: { select: { Study: true, Content: true } },
         Study: {
           include: {
-            studtent: {
-              include: { person: true },
+            Student: {
+              include: { Person: true },
             },
           },
         },
@@ -205,7 +205,7 @@ export default class DashboardService extends DefaultService {
         fk_student_id: student.id,
         fk_class_id: classId,
       },
-      include: { class: true },
+      include: { Class: true },
     });
   }
 
@@ -240,9 +240,9 @@ export default class DashboardService extends DefaultService {
 
     const studies = await prisma.study.findMany({
       where: { fk_student_id: student.id },
-      include: { class: true },
+      include: { Class: true },
     });
 
-    return studies.map((s) => s.class);
+    return studies.map((s) => s.Class);
   }
 }

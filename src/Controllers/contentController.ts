@@ -41,15 +41,15 @@ const getAllByType = async (req: AuthRequest, res: Response) => {
           fk_class_id: { in: classIds },
         },
         include: {
-          teacher: { include: { person: true } },
-          class: true,
+          Teacher: { include: { Person: true } },
+          Class: true,
           Test: {
             include: { Question: { orderBy: { order: "asc" } } },
           },
           Comment: {
             include: {
-              student: { include: { person: true } },
-              teacher: { include: { person: true } },
+              Student: { include: { Person: true } },
+              Teacher: { include: { Person: true } },
             },
             orderBy: { created_at: "desc" },
           },

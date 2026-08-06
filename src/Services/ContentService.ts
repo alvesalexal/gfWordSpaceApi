@@ -50,15 +50,15 @@ export default class ContentService extends DefaultService {
     return await prisma.content.findMany({
       where,
       include: {
-        teacher: { include: { person: true } },
-        class: true,
+        Teacher: { include: { Person: true } },
+        Class: true,
         Test: {
           include: { Question: { orderBy: { order: "asc" } } },
         },
         Comment: {
           include: {
-            student: { include: { person: true } },
-            teacher: { include: { person: true } },
+            Student: { include: { Person: true } },
+            Teacher: { include: { Person: true } },
           },
           orderBy: { created_at: "desc" },
         },
@@ -73,15 +73,15 @@ export default class ContentService extends DefaultService {
     return await prisma.content.findUnique({
       where: { id },
       include: {
-        teacher: { include: { person: true } },
-        class: true,
+        Teacher: { include: { Person: true } },
+        Class: true,
         Test: {
           include: { Question: { orderBy: { order: "asc" } } },
         },
         Comment: {
           include: {
-            student: { include: { person: true } },
-            teacher: { include: { person: true } },
+            Student: { include: { Person: true } },
+            Teacher: { include: { Person: true } },
           },
           orderBy: { created_at: "desc" },
         },
@@ -104,8 +104,8 @@ export default class ContentService extends DefaultService {
         fk_teacher_id: data.fk_teacher_id,
       },
       include: {
-        teacher: { include: { person: true } },
-        class: true,
+        Teacher: { include: { Person: true } },
+        Class: true,
       },
     });
   }
@@ -117,8 +117,8 @@ export default class ContentService extends DefaultService {
       where: { id },
       data,
       include: {
-        teacher: { include: { person: true } },
-        class: true,
+        Teacher: { include: { Person: true } },
+        Class: true,
       },
     });
   }
@@ -176,8 +176,8 @@ export default class ContentService extends DefaultService {
     return await prisma.content.findUnique({
       where: { id: content.id },
       include: {
-        teacher: { include: { person: true } },
-        class: true,
+        Teacher: { include: { Person: true } },
+        Class: true,
         Test: {
           include: { Question: { orderBy: { order: "asc" } } },
         },
@@ -241,8 +241,8 @@ export default class ContentService extends DefaultService {
     return await prisma.content.findUnique({
       where: { id: content.id },
       include: {
-        teacher: { include: { person: true } },
-        class: true,
+        Teacher: { include: { Person: true } },
+        Class: true,
         Test: {
           include: { Question: { orderBy: { order: "asc" } } },
         },
@@ -352,8 +352,8 @@ export default class ContentService extends DefaultService {
           fk_content_id: contentId,
         },
         include: {
-          student: { include: { person: true } },
-          teacher: { include: { person: true } },
+          Student: { include: { Person: true } },
+          Teacher: { include: { Person: true } },
         },
       });
     }
@@ -373,8 +373,8 @@ export default class ContentService extends DefaultService {
         fk_content_id: contentId,
       },
       include: {
-        student: { include: { person: true } },
-        teacher: { include: { person: true } },
+        Student: { include: { Person: true } },
+        Teacher: { include: { Person: true } },
       },
     });
   }
@@ -391,8 +391,8 @@ export default class ContentService extends DefaultService {
       where: { id },
       data: { message, updated_at: new Date() },
       include: {
-        student: { include: { person: true } },
-        teacher: { include: { person: true } },
+        Student: { include: { Person: true } },
+        Teacher: { include: { Person: true } },
       },
     });
   }
@@ -445,7 +445,7 @@ export default class ContentService extends DefaultService {
       return await prisma.performs.update({
         where: { id: existingPerform.id },
         data: { answer: answersJson, score },
-        include: { test: true, student: { include: { person: true } } },
+        include: { Test: true, Student: { include: { Person: true } } },
       });
     }
 
@@ -456,7 +456,7 @@ export default class ContentService extends DefaultService {
         fk_student_id: student.id,
         fk_test_id: testId,
       },
-      include: { test: true, student: { include: { person: true } } },
+      include: { Test: true, Student: { include: { Person: true } } },
     });
   }
 
@@ -474,7 +474,7 @@ export default class ContentService extends DefaultService {
     return await prisma.performs.findMany({
       where: { fk_student_id: student.id },
       include: {
-        test: { include: { content: true, Question: true } },
+        Test: { include: { content: true, Question: true } },
       },
       orderBy: { created_at: "desc" },
     });
@@ -486,7 +486,7 @@ export default class ContentService extends DefaultService {
     return await prisma.performs.findMany({
       where: { fk_test_id: testId },
       include: {
-        student: { include: { person: true } },
+        Student: { include: { Person: true } },
       },
       orderBy: { created_at: "desc" },
     });
