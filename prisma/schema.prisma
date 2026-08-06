@@ -39,6 +39,7 @@ model Teacher {
   person       Person    @relation(fields: [fk_person_id], references: [id])
   Lecture      Lecture[]
   Content      Content[]
+  Comment      Comment[]
 }
 
 model Class {
@@ -122,8 +123,10 @@ model Comment {
   created_at    DateTime  @default(now())
   updated_at    DateTime?
   message       String    @db.Text()
-  fk_student_id Int
+  fk_student_id Int?
+  fk_teacher_id Int?
   fk_content_id Int
-  student       Student   @relation(fields: [fk_student_id], references: [id])
+  student       Student?  @relation(fields: [fk_student_id], references: [id])
+  teacher       Teacher?  @relation(fields: [fk_teacher_id], references: [id])
   content       Content   @relation(fields: [fk_content_id], references: [id])
 }

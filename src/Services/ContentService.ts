@@ -56,7 +56,10 @@ export default class ContentService extends DefaultService {
           include: { Question: { orderBy: { order: "asc" } } },
         },
         Comment: {
-          include: { student: { include: { person: true } } },
+          include: {
+            student: { include: { person: true } },
+            teacher: { include: { person: true } },
+          },
           orderBy: { created_at: "desc" },
         },
       },
@@ -76,7 +79,10 @@ export default class ContentService extends DefaultService {
           include: { Question: { orderBy: { order: "asc" } } },
         },
         Comment: {
-          include: { student: { include: { person: true } } },
+          include: {
+            student: { include: { person: true } },
+            teacher: { include: { person: true } },
+          },
           orderBy: { created_at: "desc" },
         },
       },
@@ -320,11 +326,40 @@ export default class ContentService extends DefaultService {
     });
   }
 
-  async addComment(studentId: number, contentId: number, message: string) {
+  async getTeacherByPersonId(personId: number) {
+    const prisma = super.getPersonPrisma();
+    return await prisma.teacher.findFirst({
+      where: { fk_person_id: personId },
+    });
+  }
+
+  async addComment(personId: number, contentId: number, message: string, role: string) {
     const prisma = super.getPersonPrisma();
 
+    if (role === "teacher") {
+      const teacher = await prisma.teacher.findFirst({
+        where: { fk_person_id: personId },
+      });
+
+      if (!teacher) {
+        throw new Error("Professor não encontrado.");
+      }
+
+      return await prisma.comment.create({
+        data: {
+          message,
+          fk_teacher_id: teacher.id,
+          fk_content_id: contentId,
+        },
+        include: {
+          student: { include: { person: true } },
+          teacher: { include: { person: true } },
+        },
+      });
+    }
+
     const student = await prisma.student.findFirst({
-      where: { fk_person_id: studentId },
+      where: { fk_person_id: personId },
     });
 
     if (!student) {
@@ -339,6 +374,7 @@ export default class ContentService extends DefaultService {
       },
       include: {
         student: { include: { person: true } },
+        teacher: { include: { person: true } },
       },
     });
   }
@@ -356,6 +392,7 @@ export default class ContentService extends DefaultService {
       data: { message, updated_at: new Date() },
       include: {
         student: { include: { person: true } },
+        teacher: { include: { person: true } },
       },
     });
   }

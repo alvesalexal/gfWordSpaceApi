@@ -22,8 +22,8 @@ router.delete("/question/:id", authMiddleware, teacherMiddleware, contentControl
 router.post("/test/:testId/submit", authMiddleware, studentMiddleware, contentController.submitTest);
 router.get("/test/:testId/performs", authMiddleware, contentController.getTestPerforms);
 
-router.post("/:contentId/comment", authMiddleware, studentMiddleware, contentController.addComment);
-router.put("/comment/:commentId", authMiddleware, studentMiddleware, contentController.updateComment);
+router.post("/:contentId/comment", authMiddleware, contentController.addComment);
+router.put("/comment/:commentId", authMiddleware, contentController.updateComment);
 router.delete("/comment/:commentId", authMiddleware, contentController.deleteComment);
 
 router.post("/", authMiddleware, teacherMiddleware, contentController.create);

@@ -47,7 +47,10 @@ const getAllByType = async (req: AuthRequest, res: Response) => {
             include: { Question: { orderBy: { order: "asc" } } },
           },
           Comment: {
-            include: { student: { include: { person: true } } },
+            include: {
+              student: { include: { person: true } },
+              teacher: { include: { person: true } },
+            },
             orderBy: { created_at: "desc" },
           },
         },
@@ -353,7 +356,7 @@ const addComment = async (req: AuthRequest, res: Response) => {
     }
 
     const contentService = new ContentService();
-    const comment = await contentService.addComment(req.userId, contentId, message);
+    const comment = await contentService.addComment(req.userId, contentId, message, req.userRole || "student");
 
     res.status(201).json(comment);
   } catch (error: any) {
@@ -377,6 +380,16 @@ const deleteComment = async (req: AuthRequest, res: Response) => {
       if (!student || comment.fk_student_id !== student.id) {
         res.status(403).json({ message: "Você não pode excluir este comentário." });
         return;
+      }
+    }
+
+    if (req.userRole === "teacher") {
+      if (comment.fk_teacher_id) {
+        const teacher = await contentService.getTeacherByPersonId(req.userId!);
+        if (!teacher || comment.fk_teacher_id !== teacher.id) {
+          res.status(403).json({ message: "Professores não podem excluir comentários de outros professores." });
+          return;
+        }
       }
     }
 
@@ -413,6 +426,14 @@ const updateComment = async (req: AuthRequest, res: Response) => {
     if (req.userRole === "student") {
       const student = await contentService.getStudentByPersonId(req.userId);
       if (!student || comment.fk_student_id !== student.id) {
+        res.status(403).json({ message: "Você não pode editar este comentário." });
+        return;
+      }
+    }
+
+    if (req.userRole === "teacher") {
+      const teacher = await contentService.getTeacherByPersonId(req.userId);
+      if (!teacher || comment.fk_teacher_id !== teacher.id) {
         res.status(403).json({ message: "Você não pode editar este comentário." });
         return;
       }
