@@ -474,7 +474,7 @@ export default class ContentService extends DefaultService {
     return await prisma.performs.findMany({
       where: { fk_student_id: student.id },
       include: {
-        Test: { include: { content: true, Question: true } },
+        Test: { include: { Content: true, Question: true } },
       },
       orderBy: { created_at: "desc" },
     });
