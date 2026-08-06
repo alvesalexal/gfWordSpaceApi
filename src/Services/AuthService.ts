@@ -188,4 +188,14 @@ export default class AuthService extends DefaultService {
 
     return person;
   }
+
+  async checkUsername(username: string) {
+    const prisma = super.getPersonPrisma();
+
+    const existing = await prisma.person.findFirst({
+      where: { username },
+    });
+
+    return { available: !existing };
+  }
 }

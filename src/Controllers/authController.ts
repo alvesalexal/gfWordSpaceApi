@@ -100,6 +100,24 @@ const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
-const authController = { register, login, getMe, forgotPassword, resetPassword };
+const checkUsername = async (req: Request, res: Response) => {
+  try {
+    const { username } = req.params;
+
+    if (!username) {
+      res.status(400).json({ message: "Username é obrigatório." });
+      return;
+    }
+
+    const authService = new AuthService();
+    const result = await authService.checkUsername(username);
+
+    res.status(200).json(result);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || "Erro ao verificar username." });
+  }
+};
+
+const authController = { register, login, getMe, forgotPassword, resetPassword, checkUsername };
 
 export default authController;
