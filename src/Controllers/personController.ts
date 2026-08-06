@@ -64,11 +64,11 @@ const updateAvatar = async (req: AuthRequest, res: Response) => {
   }
 };
 
-const personConstrollerFunctions = {
+const personControllerFunctions = {
   getUnique,
   getAll,
   update,
   updateAvatar,
 };
 
-export default personConstrollerFunctions;
+export default personControllerFunctions;
