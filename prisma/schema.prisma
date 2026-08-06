@@ -7,17 +7,86 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Class {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Bio     String?   @db.VarChar(150)
+  Content Content[]
+  Lecture Lecture[]
+  Study   Study[]
+}
+
+model Comment {
+  id            Int       @id @default(autoincrement())
+  created_at    DateTime  @default(now())
+  message       String
+  fk_student_id Int?
+  fk_content_id Int
+  updated_at    DateTime?
+  fk_teacher_id Int?
+  Content       Content   @relation(fields: [fk_content_id], references: [id])
+  Student       Student?  @relation(fields: [fk_student_id], references: [id])
+  Teacher       Teacher?  @relation(fields: [fk_teacher_id], references: [id])
+}
+
+model Content {
+  id            Int       @id @default(autoincrement())
+  created_at    DateTime  @default(now())
+  url           String?
+  message       String
+  title         String
+  subTitle      String?
+  observation   String?
+  type          String    @default("tarefa")
+  fk_class_id   Int
+  fk_teacher_id Int
+  Comment       Comment[]
+  Class         Class     @relation(fields: [fk_class_id], references: [id])
+  Teacher       Teacher   @relation(fields: [fk_teacher_id], references: [id])
+  Test          Test[]
+}
+
+model Lecture {
+  id            Int     @id @default(autoincrement())
+  fk_teacher_id Int
+  fk_class_id   Int
+  Class         Class   @relation(fields: [fk_class_id], references: [id])
+  Teacher       Teacher @relation(fields: [fk_teacher_id], references: [id])
+}
+
+model Performs {
+  id            Int      @id @default(autoincrement())
+  created_at    DateTime @default(now())
+  score         Decimal?
+  answer        String?
+  fk_student_id Int
+  fk_test_id    Int
+  Student       Student  @relation(fields: [fk_student_id], references: [id])
+  Test          Test     @relation(fields: [fk_test_id], references: [id])
+}
+
 model Person {
   id         Int       @id @default(autoincrement())
   name       String
   phone      String?
   email      String
   password   String
-  role       String    @default("student") // "teacher" ou "student"
+  role       String    @default("student")
   url_avatar String?
   created_at DateTime  @default(now())
   Student    Student[]
   Teacher    Teacher[]
+}
+
+model Question {
+  id             Int     @id @default(autoincrement())
+  title          String
+  type           String  @default("multiple_choice")
+  options        String?
+  correct_answer String?
+  order          Int     @default(0)
+  fk_test_id     Int
+  Test           Test    @relation(fields: [fk_test_id], references: [id])
 }
 
 model Student {
@@ -25,10 +94,18 @@ model Student {
   active       Boolean    @default(true)
   bio          String?
   fk_person_id Int
-  person       Person     @relation(fields: [fk_person_id], references: [id])
-  Study        Study[]
-  Performs     Performs[]
   Comment      Comment[]
+  Performs     Performs[]
+  Person       Person     @relation(fields: [fk_person_id], references: [id])
+  Study        Study[]
+}
+
+model Study {
+  id            Int     @id @default(autoincrement())
+  fk_student_id Int
+  fk_class_id   Int
+  Class         Class   @relation(fields: [fk_class_id], references: [id])
+  Student       Student @relation(fields: [fk_student_id], references: [id])
 }
 
 model Teacher {
@@ -36,97 +113,20 @@ model Teacher {
   active       Boolean   @default(true)
   bio          String?
   fk_person_id Int
-  person       Person    @relation(fields: [fk_person_id], references: [id])
-  Lecture      Lecture[]
-  Content      Content[]
   Comment      Comment[]
-}
-
-model Class {
-  id      Int       @id @default(autoincrement())
-  name    String
-  Bio     String?   @db.VarChar(150)
-  Lecture Lecture[]
-  Content Content[]
-  Study   Study[]
-}
-
-model Lecture {
-  id            Int     @id @default(autoincrement())
-  fk_teacher_id Int
-  fk_class_id   Int
-  teacher       Teacher @relation(fields: [fk_teacher_id], references: [id])
-  class         Class   @relation(fields: [fk_class_id], references: [id])
-}
-
-model Content {
-  id            Int       @id @default(autoincrement())
-  created_at    DateTime  @default(now())
-  url           String?
-  message       String    @db.Text()
-  title         String
-  subTitle      String?
-  observation   String?
-  type          String    @default("tarefa") // "tarefa", "leitura", "prova"
-  fk_class_id   Int
-  fk_teacher_id Int
-  class         Class     @relation(fields: [fk_class_id], references: [id])
-  teacher       Teacher   @relation(fields: [fk_teacher_id], references: [id])
-  Test          Test[]
-  Comment       Comment[]
-}
-
-model Study {
-  id            Int     @id @default(autoincrement())
-  fk_student_id Int
-  fk_class_id   Int
-  class         Class   @relation(fields: [fk_class_id], references: [id])
-  studtent      Student @relation(fields: [fk_student_id], references: [id])
+  Content      Content[]
+  Lecture      Lecture[]
+  Person       Person    @relation(fields: [fk_person_id], references: [id])
 }
 
 model Test {
   id            Int        @id @default(autoincrement())
-  title         String     @db.Text()
+  title         String
   timer_minutes Int        @default(60)
   observation   String?
   created_at    DateTime   @default(now())
   fk_content_id Int
-  content       Content    @relation(fields: [fk_content_id], references: [id])
   Performs      Performs[]
   Question      Question[]
-}
-
-model Question {
-  id             Int     @id @default(autoincrement())
-  title          String  @db.Text()
-  type           String  @default("multiple_choice") // "multiple_choice" | "free_text"
-  options        String? @db.Text() // JSON: [{id:"a",text:"Opcao 1"}, ...]
-  correct_answer String? @db.Text() // id da opcao correta (ex: "a")
-  order          Int     @default(0)
-  fk_test_id     Int
-  test           Test    @relation(fields: [fk_test_id], references: [id])
-}
-
-model Performs {
-  id            Int      @id @default(autoincrement())
-  created_at    DateTime @default(now())
-  score         Decimal?
-  answer        String?  @db.Text() // JSON: {"1":"a","2":"texto..."}
-  fk_student_id Int
-  fk_test_id    Int
-  student       Student  @relation(fields: [fk_student_id], references: [id])
-  test          Test     @relation(fields: [fk_test_id], references: [id])
-}
-
-model Comment {
-  id            Int       @id @default(autoincrement())
-  created_at    DateTime  @default(now())
-  updated_at    DateTime?
-  message       String    @db.Text()
-  fk_student_id Int?
-  fk_teacher_id Int?
-  fk_content_id Int
-  student       Student?  @relation(fields: [fk_student_id], references: [id])
-  teacher       Teacher?  @relation(fields: [fk_teacher_id], references: [id])
-  content       Content   @relation(fields: [fk_content_id], references: [id])
+  Content       Content    @relation(fields: [fk_content_id], references: [id])
 }
