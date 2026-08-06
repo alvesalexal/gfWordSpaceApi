@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import DefaultService from "./ServiceDefault";
+import { getBrazilDate } from "../utils/timezone";
 
 const JWT_SECRET = process.env.JWT_SECRET || "wordspace-secret-key";
 
@@ -38,6 +39,7 @@ export default class AuthService extends DefaultService {
         password: hashedPassword,
         role: data.role,
         phone: data.phone || null,
+        created_at: getBrazilDate(),
       },
     });
 

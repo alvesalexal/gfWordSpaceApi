@@ -1,4 +1,5 @@
 import DefaultService from "./ServiceDefault";
+import { getBrazilDate } from "../utils/timezone";
 
 interface CreateContentParams {
   title: string;
@@ -102,6 +103,7 @@ export default class ContentService extends DefaultService {
         type: data.type,
         fk_class_id: data.fk_class_id,
         fk_teacher_id: data.fk_teacher_id,
+        created_at: getBrazilDate(),
       },
       include: {
         Teacher: { include: { Person: true } },
@@ -148,6 +150,7 @@ export default class ContentService extends DefaultService {
         type: data.type || "prova",
         fk_class_id: data.fk_class_id,
         fk_teacher_id: data.fk_teacher_id,
+        created_at: getBrazilDate(),
       },
     });
 
@@ -157,6 +160,7 @@ export default class ContentService extends DefaultService {
         timer_minutes: data.timer_minutes || 60,
         observation: data.observation || "",
         fk_content_id: content.id,
+        created_at: getBrazilDate(),
       },
     });
 
@@ -259,6 +263,7 @@ export default class ContentService extends DefaultService {
         observation: data.observation || "",
         timer_minutes: data.timer_minutes || 60,
         fk_content_id: data.fk_content_id,
+        created_at: getBrazilDate(),
       },
     });
   }
@@ -350,6 +355,7 @@ export default class ContentService extends DefaultService {
           message,
           fk_teacher_id: teacher.id,
           fk_content_id: contentId,
+          created_at: getBrazilDate(),
         },
         include: {
           Student: { include: { Person: true } },
@@ -371,6 +377,7 @@ export default class ContentService extends DefaultService {
         message,
         fk_student_id: student.id,
         fk_content_id: contentId,
+        created_at: getBrazilDate(),
       },
       include: {
         Student: { include: { Person: true } },
@@ -389,7 +396,7 @@ export default class ContentService extends DefaultService {
 
     return await prisma.comment.update({
       where: { id },
-      data: { message, updated_at: new Date() },
+      data: { message, updated_at: getBrazilDate() },
       include: {
         Student: { include: { Person: true } },
         Teacher: { include: { Person: true } },
@@ -455,6 +462,7 @@ export default class ContentService extends DefaultService {
         score,
         fk_student_id: student.id,
         fk_test_id: testId,
+        created_at: getBrazilDate(),
       },
       include: { Test: true, Student: { include: { Person: true } } },
     });
