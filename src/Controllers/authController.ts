@@ -4,10 +4,10 @@ import { AuthRequest } from "../Middleware/auth";
 
 const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, role, phone } = req.body;
+    const { name, username, email, password, role, phone } = req.body;
 
-    if (!name || !email || !password || !role) {
-      res.status(400).json({ message: "Nome, email, senha e perfil são obrigatórios." });
+    if (!name || !username || !email || !password || !role) {
+      res.status(400).json({ message: "Nome, username, email, senha e perfil são obrigatórios." });
       return;
     }
 
@@ -17,7 +17,7 @@ const register = async (req: Request, res: Response) => {
     }
 
     const authService = new AuthService();
-    const result = await authService.register({ name, email, password, role, phone });
+    const result = await authService.register({ name, username, email, password, role, phone });
 
     res.status(201).json(result);
   } catch (error: any) {
