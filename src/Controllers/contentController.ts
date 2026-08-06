@@ -365,11 +365,63 @@ const deleteComment = async (req: AuthRequest, res: Response) => {
   try {
     const id = Number(req.params.commentId);
     const contentService = new ContentService();
-    await contentService.deleteComment(id);
 
+    const comment = await contentService.getCommentById(id);
+    if (!comment) {
+      res.status(404).json({ message: "Comentário não encontrado." });
+      return;
+    }
+
+    if (req.userRole === "student") {
+      const student = await contentService.getStudentByPersonId(req.userId!);
+      if (!student || comment.fk_student_id !== student.id) {
+        res.status(403).json({ message: "Você não pode excluir este comentário." });
+        return;
+      }
+    }
+
+    await contentService.deleteComment(id);
     res.status(200).json({ message: "Comentário removido." });
   } catch (error: any) {
     res.status(500).json({ message: error.message || "Erro ao remover comentário." });
+  }
+};
+
+const updateComment = async (req: AuthRequest, res: Response) => {
+  try {
+    const id = Number(req.params.commentId);
+    const { message } = req.body;
+
+    if (!message) {
+      res.status(400).json({ message: "Mensagem é obrigatória." });
+      return;
+    }
+
+    if (!req.userId) {
+      res.status(401).json({ message: "Não autenticado." });
+      return;
+    }
+
+    const contentService = new ContentService();
+
+    const comment = await contentService.getCommentById(id);
+    if (!comment) {
+      res.status(404).json({ message: "Comentário não encontrado." });
+      return;
+    }
+
+    if (req.userRole === "student") {
+      const student = await contentService.getStudentByPersonId(req.userId);
+      if (!student || comment.fk_student_id !== student.id) {
+        res.status(403).json({ message: "Você não pode editar este comentário." });
+        return;
+      }
+    }
+
+    const updated = await contentService.updateComment(id, message);
+    res.status(200).json(updated);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || "Erro ao editar comentário." });
   }
 };
 
@@ -445,6 +497,7 @@ const contentController = {
   deleteQuestion,
   getQuestions,
   addComment,
+  updateComment,
   deleteComment,
   submitTest,
   getMyPerforms,

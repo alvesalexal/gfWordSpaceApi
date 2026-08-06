@@ -313,6 +313,13 @@ export default class ContentService extends DefaultService {
     });
   }
 
+  async getStudentByPersonId(personId: number) {
+    const prisma = super.getPersonPrisma();
+    return await prisma.student.findFirst({
+      where: { fk_person_id: personId },
+    });
+  }
+
   async addComment(studentId: number, contentId: number, message: string) {
     const prisma = super.getPersonPrisma();
 
@@ -330,6 +337,23 @@ export default class ContentService extends DefaultService {
         fk_student_id: student.id,
         fk_content_id: contentId,
       },
+      include: {
+        student: { include: { person: true } },
+      },
+    });
+  }
+
+  async getCommentById(id: number) {
+    const prisma = super.getPersonPrisma();
+    return await prisma.comment.findUnique({ where: { id } });
+  }
+
+  async updateComment(id: number, message: string) {
+    const prisma = super.getPersonPrisma();
+
+    return await prisma.comment.update({
+      where: { id },
+      data: { message, updated_at: new Date() },
       include: {
         student: { include: { person: true } },
       },
