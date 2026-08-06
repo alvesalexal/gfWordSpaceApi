@@ -27,15 +27,15 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { login, password } = req.body;
 
-    if (!email || !password) {
-      res.status(400).json({ message: "Email e senha são obrigatórios." });
+    if (!login || !password) {
+      res.status(400).json({ message: "Email/usuário e senha são obrigatórios." });
       return;
     }
 
     const authService = new AuthService();
-    const result = await authService.login({ email, password });
+    const result = await authService.login({ login, password });
 
     res.status(200).json(result);
   } catch (error: any) {

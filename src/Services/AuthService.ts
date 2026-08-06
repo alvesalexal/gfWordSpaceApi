@@ -15,7 +15,7 @@ interface RegisterParams {
 }
 
 interface LoginParams {
-  email: string;
+  login: string;
   password: string;
 }
 
@@ -97,18 +97,22 @@ export default class AuthService extends DefaultService {
   async login(data: LoginParams) {
     const prisma = super.getPersonPrisma();
 
+    const whereClause = data.login.includes("@")
+      ? { email: data.login }
+      : { username: data.login };
+
     const person = await prisma.person.findFirst({
-      where: { email: data.email },
+      where: whereClause,
     });
 
     if (!person) {
-      throw new Error("Email ou senha inválidos.");
+      throw new Error("Credenciais inválidas.");
     }
 
     const validPassword = await bcrypt.compare(data.password, person.password);
 
     if (!validPassword) {
-      throw new Error("Email ou senha inválidos.");
+      throw new Error("Credenciais inválidas.");
     }
 
     const token = jwt.sign({ userId: person.id, role: person.role }, JWT_SECRET, { expiresIn: "7d" });
@@ -118,6 +122,7 @@ export default class AuthService extends DefaultService {
       user: {
         id: person.id,
         name: person.name,
+        username: person.username,
         email: person.email,
         role: person.role,
         avatar: person.url_avatar,
